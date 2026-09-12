@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#193c32">
+  <meta name="description" content="Find your estimated resting energy needs and a considered daily calorie starting point. A free, private adult calorie calculator.">
+  <title>Form — Find your daily balance</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">Skip to calculator</a>
+  <header class="site-header shell">
+    <a class="brand" href="./" aria-label="Form home"><span class="brand-mark" aria-hidden="true">f</span>form<span class="brand-period">.</span></a>
+    <nav aria-label="Main navigation"><a href="#calculator">Calculator</a><a href="#method">The science <span aria-hidden="true">↗</span></a></nav>
+    <span class="header-note"><span class="status-dot"></span> A little more in balance</span>
+  </header>
+
+  <main>
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="small-line"></span> MEET YOUR DAILY ENERGY</p>
+        <h1 id="hero-title">Your body.<br>Your rhythm.<br><em>Your balance.</em></h1>
+        <p class="hero-description">Less guesswork. A better starting point. Understand what your body needs, and find a daily calorie target that moves with your goals.</p>
+        <a class="text-link" href="#calculator">Find your balance <span aria-hidden="true">↘</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <span class="art-label label-top">A LITTLE SCIENCE.</span>
+        <div class="balance-stone stone-bottom"></div><div class="balance-stone stone-top"></div>
+        <span class="art-spark">✳</span>
+        <span class="art-label label-bottom">A LOT MORE YOU.</span>
+        <div class="art-caption"><span class="status-dot"></span> Built around your body</div>
+      </div>
+    </section>
+
+    <section id="calculator" class="calculator-section shell" aria-labelledby="calculator-heading">
+      <div class="section-heading"><div><p class="eyebrow">01 / YOUR STARTING POINT</p><h2 id="calculator-heading">Make it personal.</h2></div><p>A few details.<br>A clearer picture.</p></div>
+      <div class="calculator-grid">
+        <form id="calorie-form" class="form-panel" novalidate>
+          <div class="panel-top"><h3>Your everyday essentials</h3><div class="unit-switch" role="group" aria-label="Measurement units"><button type="button" data-unit="metric" aria-pressed="true">Metric</button><button type="button" data-unit="imperial" aria-pressed="false">Imperial</button></div></div>
+          <div class="input-grid">
+            <div class="field"><label for="age">Age</label><div class="input-wrap"><input id="age" name="age" type="number" min="18" max="100" step="1" inputmode="numeric" placeholder="28" required aria-describedby="age-hint"><span>years</span></div><small id="age-hint">For adults aged 18–100</small></div>
+            <div class="field"><label for="sex">Sex used in equation</label><select id="sex" name="sex" required aria-describedby="sex-hint"><option value="">Select coefficient</option><option value="female">Female</option><option value="male">Male</option></select><small id="sex-hint">A formula input, not gender identity</small></div>
+            <div class="field"><label for="height">Height</label><div class="input-wrap"><input id="height" name="height" type="number" min="120" max="230" step="any" inputmode="decimal" placeholder="170" required aria-describedby="height-unit"><span id="height-unit">cm</span></div></div>
+            <div class="field"><label for="weight">Weight</label><div class="input-wrap"><input id="weight" name="weight" type="number" min="35" max="300" step="any" inputmode="decimal" placeholder="70" required aria-describedby="weight-unit"><span id="weight-unit">kg</span></div></div>
+          </div>
+          <div class="field activity-field"><label for="activity">What does your usual week look like?</label><select id="activity" name="activity"><option value="sedentary">Mostly sitting · little planned exercise</option><option value="light">Lightly active · exercise 1–3 days/week</option><option value="moderate">Moderately active · exercise 3–5 days/week</option><option value="active">Very active · exercise 6–7 days/week</option><option value="veryActive">Highly active · physical job + hard training</option></select><small>Choose your typical routine, not your busiest week.</small></div>
+          <fieldset class="goal-field"><legend>What are you working toward?</legend><div class="goal-options">
+            <label class="goal-option"><input type="radio" name="goal" value="lose"><span><b aria-hidden="true">↘</b><strong>Lose weight</strong><small>A gentle deficit</small></span></label>
+            <label class="goal-option"><input type="radio" name="goal" value="maintain" checked><span><b aria-hidden="true">↔</b><strong>Maintain</strong><small>Find your balance</small></span></label>
+            <label class="goal-option"><input type="radio" name="goal" value="gain"><span><b aria-hidden="true">↗</b><strong>Gain weight</strong><small>A steady surplus</small></span></label>
+          </div></fieldset>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+          <button class="calculate-button" type="submit">Calculate my balance <span aria-hidden="true">↗</span></button>
+          <p class="privacy-note"><span aria-hidden="true">◈</span> Just for you. Measurements stay in this browser tab.</p>
+        </form>
+
+        <aside class="results-panel" aria-labelledby="results-heading">
+          <div class="results-top"><p class="eyebrow">YOUR DAILY BALANCE</p><span class="result-badge" id="result-badge">READY WHEN YOU ARE</span></div>
+          <div id="empty-results" class="empty-results"><div class="empty-orbit" aria-hidden="true"><span>✳</span></div><h3 id="results-heading">A number with<br><em>you at the center.</em></h3><p>Add your details to discover your estimated daily energy needs.</p><div class="empty-baseline"><span>Resting energy</span><span>Daily movement</span><span>Your goal</span></div></div>
+          <div id="populated-results" hidden>
+            <h3 id="target-heading" class="target-heading">Your maintenance target</h3>
+            <div class="target-number"><span id="target-value">—</span><span class="target-unit">kcal / day</span></div>
+            <p id="target-description" class="target-description"></p>
+            <div class="energy-track" aria-hidden="true"><span id="energy-fill"></span></div><div class="track-labels"><span>Rest</span><span>Movement + everyday life</span></div>
+            <div class="energy-stats"><div><span>Resting energy <abbr title="Basal metabolic rate">BMR</abbr></span><strong id="bmr-value">—</strong><small>kcal / day at rest</small></div><div><span>Daily energy <abbr title="Total daily energy expenditure">TDEE</abbr></span><strong id="maintenance-value">—</strong><small>kcal / day to maintain</small></div></div>
+            <div class="target-comparison" aria-label="Daily calorie estimates for each goal"><div data-result-goal="lose"><span>Lose</span><strong id="loss-value">—</strong></div><div data-result-goal="maintain"><span>Maintain</span><strong id="maintain-value">—</strong></div><div data-result-goal="gain"><span>Gain</span><strong id="gain-value">—</strong></div></div>
+            <p id="estimate-warning" class="estimate-warning" hidden></p>
+            <p class="result-note">A starting point, not a prescription. Energy needs vary. Review your energy, wellbeing, and weight trend over 2–4 weeks before adjusting.</p>
+          </div>
+          <div class="results-footer"><span aria-hidden="true">✳</span> Progress is personal. Make room for it.</div>
+        </aside>
+      </div>
+      <p id="result-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <noscript><p class="form-error">Enable JavaScript to calculate your estimates. All calculations happen in your browser.</p></noscript>
+    </section>
+
+    <section id="method" class="method-section shell" aria-labelledby="method-heading"><div class="method-intro"><p class="eyebrow">02 / BEHIND THE NUMBERS</p><h2 id="method-heading">Science, without<br>the overwhelm.</h2><p>No magic numbers. Just an established equation and a little context.</p></div><div class="method-details"><details open><summary><span>01</span> Start with resting energy</summary><p>We use the Mifflin–St Jeor equation: 10 × weight (kg) + 6.25 × height (cm) − 5 × age + a sex coefficient (+5 male, −161 female). It estimates resting energy needs, shown here as BMR. <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Read the original study ↗</a></p></details><details><summary><span>02</span> Add your everyday movement</summary><p>We multiply resting energy by an activity factor (1.2, 1.375, 1.55, 1.725, or 1.9) to estimate total daily energy expenditure. These are broad approximations; workout frequency alone cannot capture your actual energy use.</p></details><details><summary><span>03</span> Leave room for your goal</summary><p>Loss starts at a 15% deficit; gain starts at a 10% surplus. Loss targets are limited to at least 1,200 kcal with the female coefficient or 1,500 with the male coefficient. These are general guardrails, not a guarantee of adequate nutrition. We withhold loss targets when estimated BMI is below 18.5 or maintenance is at or below the guardrail.</p></details></div></section>
+    <section class="health-note shell" aria-label="Health information"><span aria-hidden="true">ⓘ</span><p>For general adult education, not medical advice. Not intended for pregnancy, breastfeeding, people under 18, or managing an eating disorder or a medical condition affecting nutrition. The equation may be less accurate for some bodies, including highly muscular people and people receiving hormone therapy. A registered dietitian or qualified clinician can help personalize your needs.</p></section>
+  </main>
+  <footer class="site-footer shell"><a class="brand" href="./">form<span class="brand-period">.</span></a><p>A more considered approach to everyday wellbeing.</p><span>Made for your everyday.</span></footer>
+</body>
+</html>
