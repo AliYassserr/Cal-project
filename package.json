@@ -1,0 +1,11 @@
+{
+  "name": "form-calorie-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check public/app.js && node --check public/calculator.js"
+  },
+  "engines": { "node": ">=22" }
+}
