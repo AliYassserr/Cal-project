@@ -99,10 +99,10 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onO
     }
   };
 
-  const mailtoLink = `mailto:support@formhealth.io?subject=${encodeURIComponent(
+  const mailtoLink = `mailto:aliyasser0222@gmail.com?subject=${encodeURIComponent(
     subject || 'Inquiry regarding form. platform'
   )}&body=${encodeURIComponent(
-    `Hello form. team,\n\nName: ${name || 'A user'}\nEmail: ${email || 'Not specified'}\n\nMessage:\n${message}\n\n---\nSent via form. platform`
+    `Hello Ali,\n\nName: ${name || 'A user'}\nEmail: ${email || 'Not specified'}\n\nMessage:\n${message}\n\n---\nSent via form. platform to aliyasser0222@gmail.com`
   )}`;
 
   if (!isOpen) return null;
@@ -258,8 +258,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onO
                     Message Received!
                   </h3>
                   <p style={{ color: 'var(--muted)', fontSize: '13.5px', marginTop: '8px', maxWidth: '420px' }}>
-                    Thank you for reaching out. Your message has been safely delivered to the{' '}
-                    <strong style={{ color: 'var(--ink)' }}>form.</strong> support team. We will review your inquiry and reply promptly.
+                    Thank you for reaching out. Your message has been sent directly to{' '}
+                    <strong style={{ color: 'var(--ink)' }}>Ali Yasser</strong> (<code>aliyasser0222@gmail.com</code>). We will review your inquiry and reply promptly.
                   </p>
                   {successInfo.inquiryId && (
                     <div
@@ -340,7 +340,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, onO
                 >
                   <ShieldCheck size={18} style={{ flexShrink: 0 }} />
                   <div>
-                    Inquiries are securely routed directly to our <strong>form.</strong> client care & support team.
+                    Inquiries submitted here are delivered directly to Ali (<code>aliyasser0222@gmail.com</code>).
                   </div>
                 </div>
 

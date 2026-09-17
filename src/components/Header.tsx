@@ -357,6 +357,7 @@ export const Header: React.FC<HeaderProps> = ({
               /* Signed out: Sign In & Sign Up buttons */
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <button
+                  id="header-btn-signin"
                   type="button"
                   onClick={() => onOpenAuth?.('signin')}
                   style={{
@@ -378,6 +379,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
 
                 <button
+                  id="header-btn-signup"
                   type="button"
                   onClick={() => onOpenAuth?.('signup')}
                   style={{

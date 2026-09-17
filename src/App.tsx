@@ -48,20 +48,8 @@ export default function App() {
     const checkAuthSession = async () => {
       const storedToken = localStorage.getItem('form_auth_token');
       if (!storedToken) {
-        // Provide Ali as default active profile user for seamless experience
-        const defaultAliUser: AuthUser = {
-          id: 'usr_ali_owner',
-          email: 'aliyasser0222@gmail.com',
-          name: 'Ali Yasser',
-          role: 'founder',
-          createdAt: new Date().toISOString(),
-          settings: {
-            preferredCompound: 'retatrutide',
-            dailyWaterTargetMl: 3200,
-            units: 'metric',
-          },
-        };
-        setCurrentUser(defaultAliUser);
+        // Default to signed out state so guests see "Sign In" and "Sign Up"
+        setCurrentUser(null);
         return;
       }
 
@@ -77,10 +65,15 @@ export default function App() {
             if (data.user.settings?.dailyWaterTargetMl) {
               setWaterGoalMl(data.user.settings.dailyWaterTargetMl);
             }
+          } else {
+            setCurrentUser(null);
           }
+        } else {
+          setCurrentUser(null);
         }
       } catch (err) {
-        console.warn('Session verification fallback to offline mode');
+        console.warn('Session verification fallback to signed out state');
+        setCurrentUser(null);
       }
     };
 
