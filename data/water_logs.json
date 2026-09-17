@@ -1,0 +1,26 @@
+[
+  {
+    "id": "wl_1",
+    "date": "2026-09-17",
+    "amountMl": 500,
+    "timestamp": "2026-09-17T15:38:27.069Z",
+    "timeFormatted": "08:30 AM",
+    "containerType": "bottle"
+  },
+  {
+    "id": "wl_2",
+    "date": "2026-09-17",
+    "amountMl": 350,
+    "timestamp": "2026-09-17T17:38:27.069Z",
+    "timeFormatted": "11:00 AM",
+    "containerType": "mug"
+  },
+  {
+    "id": "wl_3",
+    "date": "2026-09-17",
+    "amountMl": 500,
+    "timestamp": "2026-09-17T19:38:27.069Z",
+    "timeFormatted": "01:45 PM",
+    "containerType": "bottle"
+  }
+]

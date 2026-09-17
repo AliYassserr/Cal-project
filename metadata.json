@@ -1,0 +1,8 @@
+{
+  "name": "Form — Daily Calorie, Food & Training Optimizer",
+  "description": "Evidence-based food tracker, personalized meal & training split recommender, research-backed health tips, and dedicated GLP-1 & Retatrutide optimization protocol.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
+
