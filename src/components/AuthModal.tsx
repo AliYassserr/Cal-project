@@ -16,6 +16,7 @@ import {
   RefreshCw,
   Droplets,
   Flame,
+  Trash2,
 } from 'lucide-react';
 import { AuthUser, UserProfile } from '../types';
 
@@ -26,6 +27,7 @@ interface AuthModalProps {
   currentUser: AuthUser | null;
   onAuthSuccess: (user: AuthUser, token: string) => void;
   onSignOut: () => void;
+  onDeleteAccount?: () => Promise<boolean | void>;
   onOpenPrivacy?: () => void;
   currentProfile?: UserProfile;
 }
@@ -37,6 +39,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   currentUser,
   onAuthSuccess,
   onSignOut,
+  onDeleteAccount,
   onOpenPrivacy,
   currentProfile,
 }) => {
@@ -48,6 +51,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [agreedToTerms, setAgreedToTerms] = useState(true);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [retentionAcknowledged, setRetentionAcknowledged] = useState(false);
+  const [confirmingDeletion, setConfirmingDeletion] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -87,8 +94,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         setErrorMessage('Passwords do not match. Please re-enter.');
         return;
       }
+      if (!ageConfirmed) {
+        setErrorMessage('Age Verification Required: You must certify that you are at least 18 years old.');
+        return;
+      }
+      if (!retentionAcknowledged) {
+        setErrorMessage('Legal Consent Required: You must acknowledge that metrics and logs are stored temporarily and can be erased upon request.');
+        return;
+      }
       if (!agreedToTerms) {
-        setErrorMessage('You must acknowledge the Privacy Policy and terms.');
+        setErrorMessage('You must acknowledge the Privacy Policy and terms of use.');
         return;
       }
     }
@@ -112,6 +127,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               name: name.trim(),
               email: email.trim().toLowerCase(),
               password,
+              ageConfirmed: true,
+              dataRetentionAcknowledged: true,
               profile: currentProfile,
               waterGoalMl: 3200,
             }
@@ -365,7 +382,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <span>Cloud Sync Enabled — Your metrics, meals & water logs are safely saved.</span>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+              {/* Data Retention & Privacy Notice Box */}
+              <div
+                style={{
+                  background: '#f8faf9',
+                  border: '1px solid #e2ece6',
+                  borderRadius: '8px',
+                  padding: '10px 12px',
+                  fontSize: '11.5px',
+                  color: '#4a5568',
+                  lineHeight: 1.45,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#2d3748', marginBottom: '4px' }}>
+                  <span>⚖️ Temporary Legal Retention Notice</span>
+                </div>
+                <div>
+                  Your personal metrics and nutrition logs are stored temporarily for session continuity in compliance with GDPR Art. 5(1)(c). In accordance with GDPR Article 17 ("Right to Erasure"), you can permanently erase your entire account, profile, logs, and tokens at any time below.
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
                 <button
                   type="button"
                   onClick={onClose}
@@ -395,8 +432,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     justifyContent: 'center',
                     gap: '6px',
                     background: '#ffffff',
-                    color: '#b91c1c',
-                    border: '1px solid #fecaca',
+                    color: '#4b5563',
+                    border: '1px solid #d1d5db',
                     padding: '12px 16px',
                     borderRadius: '10px',
                     fontSize: '14px',
@@ -407,6 +444,120 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <LogOut size={16} />
                   <span>Sign Out</span>
                 </button>
+              </div>
+
+              {/* Account Deletion / Right to Erasure Section */}
+              <div
+                style={{
+                  borderTop: '1px dashed #fca5a5',
+                  paddingTop: '14px',
+                  marginTop: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                {!confirmingDeletion ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '11px', color: '#991b1b' }}>
+                      <strong>Data Erasure (GDPR Art. 17):</strong> Permanently wipe all data.
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingDeletion(true)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        background: '#fff1f2',
+                        color: '#b91c1c',
+                        border: '1px solid #fecdd3',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease',
+                      }}
+                    >
+                      <Trash2 size={13} />
+                      <span>Delete Account</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      background: '#fef2f2',
+                      border: '1px solid #f87171',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}
+                  >
+                    <div style={{ fontSize: '12px', color: '#991b1b', fontWeight: 600 }}>
+                      ⚠️ Are you sure you want to delete your account?
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#7f1d1d', lineHeight: 1.4 }}>
+                      This action is irreversible. All your stored metrics, food logs, water logs, and authentication records will be immediately and permanently deleted from the database.
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                      <button
+                        type="button"
+                        disabled={isDeleting}
+                        onClick={async () => {
+                          if (onDeleteAccount) {
+                            setIsDeleting(true);
+                            try {
+                              await onDeleteAccount();
+                              onClose();
+                            } catch (e: any) {
+                              setErrorMessage(e.message || 'Failed to delete account');
+                            } finally {
+                              setIsDeleting(false);
+                            }
+                          }
+                        }}
+                        style={{
+                          flex: 1,
+                          background: '#dc2626',
+                          color: '#ffffff',
+                          border: 'none',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: isDeleting ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        {isDeleting ? <RefreshCw size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                        <span>{isDeleting ? 'Deleting...' : 'Yes, Delete All My Data'}</span>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isDeleting}
+                        onClick={() => setConfirmingDeletion(false)}
+                        style={{
+                          background: '#ffffff',
+                          color: '#374151',
+                          border: '1px solid #d1d5db',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -693,28 +844,62 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
 
                 {mode === 'signup' && (
-                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '11px', color: 'var(--muted)', cursor: 'pointer' }}>
-                    <input
-                      type="checkbox"
-                      checked={agreedToTerms}
-                      onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      style={{ accentColor: 'var(--green)', marginTop: '2px' }}
-                    />
-                    <span>
-                      I acknowledge the{' '}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          onOpenPrivacy?.();
-                        }}
-                        style={{ background: 'none', border: 'none', padding: 0, color: 'var(--green)', textDecoration: 'underline', cursor: 'pointer', fontSize: '11px' }}
-                      >
-                        Privacy Policy
-                      </button>{' '}
-                      and understand form. is an educational nutrition tool, not medical advice.
-                    </span>
-                  </label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '10px 12px', background: '#f8faf9', border: '1px solid #e2ece6', borderRadius: '8px' }}>
+                    {/* Legal Notice: Temporary Data Storage */}
+                    <div style={{ fontSize: '11px', color: '#2d3748', lineHeight: 1.4, marginBottom: '2px' }}>
+                      <strong style={{ color: 'var(--green)' }}>⚖️ Legal Notice:</strong> All personal metrics, nutrition, and hydration records are stored <em>temporarily</em> solely to preserve your active session continuity. You may erase all your stored data at any time via Account settings.
+                    </div>
+
+                    {/* Age Checkbox */}
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '12px', color: 'var(--ink)', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={ageConfirmed}
+                        onChange={(e) => setAgeConfirmed(e.target.checked)}
+                        style={{ accentColor: 'var(--green)', marginTop: '2px' }}
+                      />
+                      <span>
+                        <strong>Age Requirement:</strong> I certify that I am <strong>18 years of age or older</strong>.
+                      </span>
+                    </label>
+
+                    {/* Temporary Storage Acknowledgment Checkbox */}
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '12px', color: 'var(--ink)', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={retentionAcknowledged}
+                        onChange={(e) => setRetentionAcknowledged(e.target.checked)}
+                        style={{ accentColor: 'var(--green)', marginTop: '2px' }}
+                      />
+                      <span>
+                        I understand that my data is only stored temporarily for legal and session reasons, and can be permanently deleted upon request.
+                      </span>
+                    </label>
+
+                    {/* Privacy & Medical Disclaimer */}
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '11px', color: 'var(--muted)', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={agreedToTerms}
+                        onChange={(e) => setAgreedToTerms(e.target.checked)}
+                        style={{ accentColor: 'var(--green)', marginTop: '2px' }}
+                      />
+                      <span>
+                        I agree to the{' '}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onOpenPrivacy?.();
+                          }}
+                          style={{ background: 'none', border: 'none', padding: 0, color: 'var(--green)', textDecoration: 'underline', cursor: 'pointer', fontSize: '11px' }}
+                        >
+                          Privacy Policy & Terms
+                        </button>{' '}
+                        and understand form. is for educational purposes only.
+                      </span>
+                    </label>
+                  </div>
                 )}
               </div>
 

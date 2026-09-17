@@ -55,6 +55,8 @@ export interface AuthUser {
   email: string;
   role?: string;
   createdAt: string;
+  ageConfirmed?: boolean;
+  dataRetentionNoticeAcknowledged?: boolean;
   profile?: UserProfile;
   waterGoalMl?: number;
   settings?: {

@@ -1,13 +1,15 @@
 [
   {
-    "id": "usr_ali_master",
-    "name": "Ali Yasser",
+    "id": "usr_1789676666758_7546b4d0",
+    "name": "ali",
     "email": "aliyasser0222@gmail.com",
-    "salt": "1a45d74917beadbb34a19ccf3d5f02df",
-    "hash": "f3848b819f5a0903d7652125afe04e43ddd917c305baa7d556dcf92b88c32da3900ce6ddae1bf10a0f7713225c53726fe9c59b7430236a6e6f0a222b6e31e9ba",
-    "createdAt": "2026-09-17T19:38:27.068Z",
+    "salt": "7c086953cd407233b6ba159358389244",
+    "hash": "0e8dc58f6aca54238dc597dd6ac7d9057108d57744f3712a8fcc40cd70c80c0d8d4fbd9af585144330955cf708d076a2f62dad99fac65263b6f26aae836454be",
+    "createdAt": "2026-09-17T20:24:26.758Z",
+    "ageConfirmed": true,
+    "dataRetentionNoticeAcknowledged": true,
     "profile": {
-      "name": "Ali",
+      "name": "User",
       "age": 28,
       "height": 170,
       "weight": 70,
@@ -18,28 +20,7 @@
       "compound": "retatrutide"
     },
     "waterGoalMl": 3200,
-    "waterLogs": [
-      {
-        "id": "w_seed_1",
-        "amountMl": 500,
-        "timestamp": "2026-09-17T16:38:27.069Z",
-        "timeFormatted": "08:15 AM",
-        "containerType": "bottle"
-      },
-      {
-        "id": "w_seed_2",
-        "amountMl": 350,
-        "timestamp": "2026-09-17T18:08:27.069Z",
-        "timeFormatted": "10:30 AM",
-        "containerType": "mug"
-      },
-      {
-        "id": "w_seed_3",
-        "amountMl": 500,
-        "timestamp": "2026-09-17T19:38:27.069Z",
-        "timeFormatted": "01:00 PM",
-        "containerType": "bottle"
-      }
-    ]
+    "waterLogs": [],
+    "foodLogs": []
   }
 ]

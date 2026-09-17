@@ -142,6 +142,42 @@ export default function App() {
     setAuthToken(null);
   };
 
+  // GDPR Art. 17 / CCPA Right to Erasure - Wipe all user data, logs, and sessions permanently
+  const handleDeleteAccount = async () => {
+    if (!authToken) {
+      throw new Error("No active session found to delete.");
+    }
+
+    try {
+      const res = await fetch('/api/auth/account', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to delete account.');
+      }
+
+      // Erase local client storage and cache
+      localStorage.removeItem('form_auth_token');
+      localStorage.removeItem('form_auth_user');
+      localStorage.removeItem('form_water_today_ml');
+      localStorage.removeItem('form_food_logs');
+
+      setCurrentUser(null);
+      setAuthToken(null);
+      setTodayWaterMl(0);
+
+      // Re-query water status clean
+      refreshWaterStatus();
+      return true;
+    } catch (err: any) {
+      console.error('Account deletion error:', err);
+      throw err;
+    }
+  };
+
   // Quick 1-tap hydro logging from header / food tracker
   const handleQuickLogWater = async (amountMl: number) => {
     const newTotal = todayWaterMl + amountMl;
@@ -349,6 +385,9 @@ export default function App() {
         onAuthSuccess={handleAuthSuccess}
         currentUser={currentUser}
         onSignOut={handleSignOut}
+        onDeleteAccount={handleDeleteAccount}
+        onOpenPrivacy={() => handleOpenLegal('privacy')}
+        currentProfile={userProfile}
       />
     </>
   );

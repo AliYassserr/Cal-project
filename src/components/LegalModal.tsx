@@ -396,24 +396,28 @@ export const LegalModal: React.FC<LegalModalProps> = ({
 
                 <section>
                   <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)', marginBottom: '6px' }}>
-                    4. Your GDPR & CCPA Rights
+                    4. Temporary Data Retention Policy & Complete Erasure
                   </h3>
                   <p>
-                    Depending on your jurisdiction (such as the EU, UK, or California under CCPA/CPRA), you possess the following enforceable rights:
+                    <strong>Temporary Storage Notice:</strong> To adhere to the principle of data minimization (GDPR Article 5(1)(c)), personal metrics, food logs, water entries, and session tokens stored in our application database are retained <em>temporarily</em> solely to provide continuity across active browser sessions and deliver your personalized metabolic calculations. 
                   </p>
-                  <ul style={{ paddingLeft: '20px', margin: '6px 0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <li><strong>Right to Erasure / Deletion:</strong> You can delete all locally saved metrics at any time using the "Clear All Data" button below. To delete contact form records, submit a request via our Contact Form.</li>
-                    <li><strong>Right to Access & Portability:</strong> You may request a copy of any personal data we hold about you.</li>
-                    <li><strong>Right to Opt-Out:</strong> We do not engage in behavioral advertising tracking or selling of personal information.</li>
+                  <p style={{ marginTop: '6px' }}>
+                    <strong>Immediate Account & Data Deletion:</strong> Under GDPR Article 17 ("Right to Erasure") and CCPA/CPRA, you possess the unconditional right to delete your account at any time. When you select <strong>"Delete Account & Wipe Data"</strong> in your Account settings:
+                  </p>
+                  <ul style={{ paddingLeft: '20px', margin: '6px 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <li>Your account record, credentials, salt, and hashes are immediately and permanently erased from the database.</li>
+                    <li>All associated food logs, daily water records, and profile metrics are purged.</li>
+                    <li>All active authentication tokens and sessions are immediately revoked and invalidated.</li>
+                    <li>All local browser cache and storage keys are wiped from your device.</li>
                   </ul>
                 </section>
 
                 <section>
                   <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)', marginBottom: '6px' }}>
-                    5. Children's Privacy (COPPA)
+                    5. Strict Age Requirement (18+)
                   </h3>
                   <p>
-                    This website is strictly intended for persons aged 18 and older. We do not knowingly collect personal data from children under the age of 18.
+                    <strong>Minimum Age Limitation:</strong> Use of <strong>form.</strong> is strictly restricted to individuals who are at least <strong>18 years of age</strong> (or the age of legal majority in your country of residence). We do not knowingly collect, store, or process personal data or biometric metrics from minors under 18 years old in compliance with COPPA, GDPR Art. 8, and relevant global child safety legislation. All users must certify during account sign up that they meet this legal age threshold.
                   </p>
                 </section>
               </div>

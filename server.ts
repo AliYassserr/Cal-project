@@ -29,7 +29,7 @@ try {
 }
 
 // -------------------------------------------------------------
-// USER & AUTHENTICATION STORAGE
+// USER & AUTHENTICATION STORAGE (TEMPORARY RETENTION DATABASE)
 // -------------------------------------------------------------
 interface UserRecord {
   id: string;
@@ -38,6 +38,8 @@ interface UserRecord {
   salt: string;
   hash: string;
   createdAt: string;
+  ageConfirmed?: boolean;
+  dataRetentionNoticeAcknowledged?: boolean;
   profile?: any;
   foodLogs?: any[];
   waterLogs?: any[];
@@ -321,9 +323,9 @@ app.post("/api/contact", (req, res) => {
 // AUTHENTICATION ENDPOINTS
 // -------------------------------------------------------------
 
-// Sign Up
+// Sign Up (Compliant with 18+ Age Requirement & GDPR Article 17 Right to Erasure)
 app.post("/api/auth/signup", (req, res) => {
-  const { name, email, password, profile, waterGoalMl } = req.body;
+  const { name, email, password, profile, waterGoalMl, ageConfirmed, dataRetentionAcknowledged } = req.body;
 
   if (!name || typeof name !== "string" || name.trim().length < 2) {
     return res.status(400).json({ error: "Please enter your name (at least 2 characters)." });
@@ -333,6 +335,20 @@ app.post("/api/auth/signup", (req, res) => {
   }
   if (!password || typeof password !== "string" || password.length < 6) {
     return res.status(400).json({ error: "Password must be at least 6 characters long." });
+  }
+
+  // Legal Age Requirement (18+)
+  if (ageConfirmed !== true) {
+    return res.status(400).json({
+      error: "Age Requirement: You must be at least 18 years old to create an account on form.",
+    });
+  }
+
+  // Legal Notice: Temporary Storage Acknowledgment
+  if (dataRetentionAcknowledged !== true) {
+    return res.status(400).json({
+      error: "Legal Requirement: You must acknowledge that your personal metrics and logs are stored temporarily for session optimization and can be erased at any time.",
+    });
   }
 
   const normalizedEmail = email.trim().toLowerCase();
@@ -353,6 +369,8 @@ app.post("/api/auth/signup", (req, res) => {
     salt,
     hash,
     createdAt: new Date().toISOString(),
+    ageConfirmed: true,
+    dataRetentionNoticeAcknowledged: true,
     profile: profile || {
       name: name.trim(),
       age: 28,
@@ -385,6 +403,8 @@ app.post("/api/auth/signup", (req, res) => {
       name: newUser.name,
       email: newUser.email,
       createdAt: newUser.createdAt,
+      ageConfirmed: true,
+      dataRetentionNoticeAcknowledged: true,
       profile: newUser.profile,
       waterGoalMl: newUser.waterGoalMl,
     },
@@ -468,6 +488,64 @@ app.post("/api/auth/logout", (req, res) => {
     saveSessions();
   }
   return res.json({ success: true });
+});
+
+// Complete Account & Data Erasure (GDPR Art. 17 / CCPA "Right to be Forgotten")
+// Completely and irreversibly deletes the user, their profile, food logs, water logs, and active sessions.
+app.delete("/api/auth/account", (req, res) => {
+  const userId = getUserIdFromReq(req);
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized: Invalid or expired session." });
+  }
+
+  const users = loadUsers();
+  const targetUser = users.find(u => u.id === userId);
+  if (!targetUser) {
+    return res.status(404).json({ error: "User account not found." });
+  }
+
+  const targetEmail = targetUser.email.toLowerCase();
+
+  // 1. Remove user from persistent database
+  const updatedUsers = users.filter(u => u.id !== userId);
+  saveUsers(updatedUsers);
+
+  // 2. Invalidate all active sessions for this user
+  for (const [token, session] of sessions.entries()) {
+    if (session.userId === userId) {
+      sessions.delete(token);
+    }
+  }
+  saveSessions();
+
+  // 3. Purge user-associated water records from global water logs
+  try {
+    let waterLogs = loadWaterLogs();
+    waterLogs = waterLogs.filter(w => w.userId !== userId);
+    saveWaterLogs(waterLogs);
+  } catch (e) {
+    console.error("Error purging user water logs:", e);
+  }
+
+  // 4. Also sanitize/purge any inquiries matching this email from inquiry logs
+  try {
+    if (fs.existsSync(INQUIRIES_FILE)) {
+      const rawInquiries = fs.readFileSync(INQUIRIES_FILE, "utf-8");
+      const inqList = JSON.parse(rawInquiries || "[]");
+      const sanitizedList = inqList.filter((i: any) => (i.email || "").toLowerCase() !== targetEmail);
+      fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(sanitizedList, null, 2), "utf-8");
+    }
+  } catch (e) {
+    console.error("Error purging inquiries:", e);
+  }
+
+  console.log(`\n🗑️ USER ACCOUNT & ALL DATA PERMANENTLY ERASED: ${targetEmail} (${userId})\n`);
+
+  return res.json({
+    success: true,
+    message: "All account records, profile metrics, food logs, water logs, and sessions have been permanently deleted in accordance with data erasure regulations.",
+    deletedUserId: userId,
+  });
 });
 
 // Sync User State (Profile, Water, Foods)
